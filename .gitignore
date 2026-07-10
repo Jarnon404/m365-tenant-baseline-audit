@@ -1,0 +1,17 @@
+# Generated reports
+m365-tenant-baseline-audit-*/
+AuditReports/
+*.log
+*.tmp
+
+# PowerShell
+*.ps1xml
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Allow docs html
+!docs/index.html

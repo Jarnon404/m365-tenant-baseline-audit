@@ -1,0 +1,29 @@
+name: PSScriptAnalyzer
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  analyze:
+    name: Analyze PowerShell scripts
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PSScriptAnalyzer
+        shell: pwsh
+        run: Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+      - name: Run PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          $Results = foreach ($Path in @("./scripts", "./tools")) {
+            if (Test-Path $Path) {
+              Invoke-ScriptAnalyzer -Path $Path -Recurse -Severity Error,Warning
+            }
+          }
+          $Results | Format-Table -AutoSize
+          if ($Results | Where-Object Severity -eq "Error") {
+            throw "PSScriptAnalyzer found errors."
+          }

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>M365 Tenant Baseline Audit</title>
+  <link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+  <main class="shell">
+    <p class="eyebrow">Microsoft 365 · Graph PowerShell · Global Reader · Read-only audit</p>
+    <h1>M365 Tenant Baseline Audit</h1>
+    <p class="lead">Public-safe PowerShell toolkit for read-only Microsoft 365 tenant baseline review. Designed for Global Reader style audits, sanitized reporting and practical IT operations.</p>
+
+    <section class="grid">
+      <article>
+        <h2>Read-only enforced</h2>
+        <p>The script validates the active Microsoft Graph context and stops if write-capable scopes are present. It collects baseline information and creates local reports only.</p>
+      </article>
+      <article>
+        <h2>Global Reader style access</h2>
+        <p>Sections complete where delegated read permissions are available and are marked as skipped where tenant consent or service access is not available.</p>
+      </article>
+      <article>
+        <h2>Reporting</h2>
+        <p>Outputs HTML, CSV, TXT and JSON reports with sanitized mode enabled by default.</p>
+      </article>
+    </section>
+
+    <section>
+      <h2>Audit areas</h2>
+      <ul>
+        <li>Tenant basics and verified domains</li>
+        <li>Licensing and organization sync visibility</li>
+        <li>Users, guests, groups, devices and directory roles</li>
+        <li>Conditional Access and authentication methods policy visibility</li>
+        <li>Application registrations and enterprise applications</li>
+        <li>Intune managed devices, policies and app inventory</li>
+        <li>Optional Exchange Online read-only baseline</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Read-only guard</h2>
+      <p>The recommended model is a dedicated read-only Entra ID app registration. If the Microsoft Graph context contains ReadWrite, Write, FullControl or similar broad scopes, the audit stops before collection starts.</p>
+    </section>
+
+    <section>
+      <h2>Usage</h2>
+      <pre><code>.\scripts\Invoke-M365TenantBaselineAudit.ps1 -TenantId &quot;&lt;TENANT_ID&gt;&quot; -ClientId &quot;&lt;READ_ONLY_APP_CLIENT_ID&gt;&quot; -OutputPath C:\Temp\M365TenantBaselineAudit</code></pre>
+    </section>
+  </main>
+</body>
+</html>

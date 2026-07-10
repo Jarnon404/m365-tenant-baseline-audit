@@ -72,12 +72,12 @@ Describe "Repository metadata" {
 Describe "Public safety" {
     It "Does not contain obvious tenant-specific placeholders from private environments" {
         $Patterns = @(
-            "real-tenant-id",
-            "customer.local",
-            "corp.local",
-            "tenant.onmicrosoft.com",
-            "password=",
-            "client_secret"
+            ("real" + "-tenant-id"),
+            ("customer" + ".local"),
+            ("corp" + ".local"),
+            ("tenant" + ".onmicrosoft.com"),
+            ("password" + "="),
+            ("client" + "_secret")
         )
 
         $ExcludedRelativePaths = @(
@@ -136,3 +136,4 @@ Describe "Read-only enforcement" {
         $script:MainScript | Should -Not -Match '\bSet-OrganizationConfig\b'
     }
 }
+

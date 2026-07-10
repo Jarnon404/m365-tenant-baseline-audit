@@ -2,15 +2,21 @@ name: Public Safety Check
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   public-safety-check:
+    name: public-safety-check
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Check for obvious private data placeholders
         shell: pwsh
         run: |
@@ -23,14 +29,25 @@ jobs:
             "client_secret"
           )
 
+          $ExcludedRelativePaths = @(
+            ".github/workflows/public-safety-check.yml",
+            "tests/Repository.Tests.ps1"
+          )
+
+          $RepoRoot = (Get-Location).Path
+
           $Files = Get-ChildItem -Path . -Recurse -File |
             Where-Object {
+              $RelativePath = $_.FullName.Replace($RepoRoot, "").TrimStart("\","/").Replace("\","/")
+
               $_.FullName -notmatch "[\\/]\.git[\\/]" -and
-              $_.Extension -in @(".ps1", ".md", ".json", ".yml", ".yaml", ".html", ".txt", "")
+              $_.Extension -in @(".ps1", ".md", ".json", ".yml", ".yaml", ".html", ".txt", "") -and
+              $RelativePath -notin $ExcludedRelativePaths
             }
 
           $Hits = foreach ($File in $Files) {
             $Content = Get-Content $File.FullName -Raw -ErrorAction SilentlyContinue
+
             foreach ($Pattern in $Patterns) {
               if ($Content -match [regex]::Escape($Pattern)) {
                 "$($File.FullName): $Pattern"
@@ -42,3 +59,5 @@ jobs:
             $Hits | ForEach-Object { Write-Host $_ }
             throw "Potential private data marker found."
           }
+
+          Write-Host "No obvious private data markers found."
